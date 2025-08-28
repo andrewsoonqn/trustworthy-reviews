@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 import os
-loacond_dotenv()
+load_dotenv()
 token = os.getenv("HUGGINGFACE_TOKEN")
-print(token)
+
 import huggingface_hub
 huggingface_hub.login(token)
 
@@ -102,4 +102,3 @@ trainer.train()
 
 file_path_to_save_the_model =  '/home/a/andrewsq/codes/text-classifier-supervised-codecademy'
 trainer.save_model(file_path_to_save_the_model)
-
