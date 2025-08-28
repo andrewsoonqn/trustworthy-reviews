@@ -5,6 +5,7 @@ import pandas as pd
 import spacy
 from spacytextblob.spacytextblob import SpacyTextBlob
 from langdetect import detect, DetectorFactory
+import llm
 
 # Fix randomness in langdetect
 DetectorFactory.seed = 0
@@ -104,3 +105,4 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
 
 if __name__ == "__main__":
     preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews.csv")
+    llm.compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.csv")
