@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 import os
-load_dotenv()
+loacond_dotenv()
 token = os.getenv("HUGGINGFACE_TOKEN")
-
+print(token)
 import huggingface_hub
 huggingface_hub.login(token)
 
