@@ -60,12 +60,12 @@ torch.device("cuda")
 
 
 # load dataset
-dataset_big = df #panda
+dataset_big = Dataset.from_pandas(df) #panda
 
 # take only 100 samples from train/validation
 dataset = DatasetDict({
-    "train": dataset_big[0:100], #.select(range(100)),
-    "validation": dataset_big[101:186] #.select(range(86)),
+    "train": dataset_big, #.select(range(100)),
+    "validation": dataset_big #.select(range(86)),
 })
 
 
