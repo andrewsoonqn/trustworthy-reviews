@@ -1,5 +1,15 @@
+<<<<<<< HEAD
 #!/usr/bin/env python
 # coding: utf-8
+=======
+from dotenv import load_dotenv
+import os
+load_dotenv()
+token = os.getenv("HUGGINGFACE_TOKEN")
+
+import huggingface_hub
+huggingface_hub.login(token)
+>>>>>>> db93a4425b40ab9f375f6e09a9fa3a09b2691b9e
 
 # # Fine-tuning Sandbox
 # 
@@ -256,6 +266,7 @@ trainer = Trainer(
 # train model
 trainer.train()
 
+<<<<<<< HEAD
 
 # ### Generate prediction
 
@@ -275,3 +286,7 @@ for text in text_list:
     print(text + " - " + id2label[predictions.tolist()[0]])
 
 
+=======
+file_path_to_save_the_model =  '/home/a/andrewsq/codes/text-classifier-supervised-codecademy'
+trainer.save_model(file_path_to_save_the_model)
+>>>>>>> db93a4425b40ab9f375f6e09a9fa3a09b2691b9e
