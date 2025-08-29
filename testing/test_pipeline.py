@@ -8,8 +8,11 @@
 
 # In[1]: 
 
+import pandas as pd
 
-from datasets import load_dataset, DatasetDict, Dataset, load_metric
+df = pd.read_csv("/Users/heyyzel/Documents/TikTok_TechJam/trustworthy-reviews/testing/mock-db/mock-db.csv")
+
+from datasets import load_dataset, DatasetDict, Dataset
 
 from transformers import (
     AutoTokenizer,
@@ -57,12 +60,12 @@ torch.device("cuda")
 
 
 # load dataset
-dataset_big = load_dataset('shawhin/imdb-truncated') #panda
+dataset_big = df #panda
 
 # take only 100 samples from train/validation
 dataset = DatasetDict({
-    "train": dataset_big["train"].select(range(100)),
-    "validation": dataset_big["validation"].select(range(100)),
+    "train": dataset_big[0:100], #.select(range(100)),
+    "validation": dataset_big[101:186] #.select(range(86)),
 })
 
 
@@ -71,7 +74,7 @@ dataset = DatasetDict({
 
 
 # display % of training data with label=1
-np.array(dataset['train']['label']).sum()/len(dataset['train']['label'])
+# np.array(dataset['train']['label']).sum()/len(dataset['train']['label'])
 
 
 # ### model
@@ -95,7 +98,7 @@ label2id = {v: k for k, v in id2label.items()} # to understand training data
 
 # generate classification model from model_checkpoint
 model = AutoModelForSequenceClassification.from_pretrained(
-    model_checkpoint, num_labels=2, id2label=id2label, label2id=label2id, problem_type="multi_label_classification")
+    model_checkpoint, num_labels=5, id2label=id2label, label2id=label2id, problem_type="multi_label_classification")
 
 
 # In[ ]:
@@ -125,7 +128,7 @@ if tokenizer.pad_token is None:
 # create tokenize function
 def tokenize_function(examples):
     # extract text
-    text = examples["text"]
+    text = examples["review_text"]
 
     #tokenize and truncate text
     tokenizer.truncation_side = "left"
@@ -160,7 +163,7 @@ data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
 
 # import accuracy evaluation metric
-metric = load_metric('accuracy')
+metric = evaluate.load("accuracy")
 
 
 # In[ ]:
@@ -171,7 +174,7 @@ metric = load_metric('accuracy')
 def compute_metrics(p):
     labels = pred.label_ids
     preds = pred.predictions.argmax(-1)
-    return metric.compute(predictions=preds, references=labels)
+    return {"accuracy": metric.compute(predictions=preds, references=labels)}
 
 
 # ### Apply untrained model to text
