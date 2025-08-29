@@ -8,11 +8,11 @@ import json
 def generate_prompt(review):
     try:
         prompt = f"""You are an AI tasked with evaluating the quality and relevancy of Google location reviews. You are provided with the following review:
-           {review} Your task is to evaluate if this review is spam, an advertisement, irrelevant to the location, or a rant by a user who has likely never
-           visited the location. In addition, you are required to analyse the sentiment of the review, labelling it as positive, negative or neutral.
+           {review.cleaned_text} Your task is to evaluate if this review is spam, an advertisement, irrelevant to the location, or a rant by a user who has likely never
+           visited the location. In addition, you are required to analyse the sentiment of the review with the help of other information provided in {review}.
 
            Provide your evaluation in the exact format below:
-           Sentiment: Positive/Negative/Neutral (Strictly only these three words)
+           Sentiment: {review.sentiment}
            Spam or Advertisement: Yes/No
            Irrelevant: Yes/No
            Rant: Yes/No
@@ -86,10 +86,10 @@ def compile_reviews(input_path, output_path):
 
         with open(output_path, "w") as json_file:
             for i, row in enumerate(df.itertuples()):
-                review_text = row.cleaned_text
-                evaluation = evaluate_review(review_text) or {}
+                text = row.cleaned_text
+                evaluation = evaluate_review(row) or {}
                 review_dict = {
-                    "review": review_text,
+                    "review": text,
                     "evaluation": evaluation
                 }
 
@@ -108,5 +108,5 @@ def compile_reviews(input_path, output_path):
     except Exception as e:
         logging.error(f"Error compiling reviews: {str(e)}")
 
-#if __name__ == "__main__":
-#    compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.json")
+if __name__ == "__main__":
+    compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.json")
