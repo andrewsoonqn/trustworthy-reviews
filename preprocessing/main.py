@@ -1,11 +1,16 @@
 # main.py
 
-import re
+import llm
+import numpy as np
 import pandas as pd
+import re
 import spacy
+
 from spacytextblob.spacytextblob import SpacyTextBlob
 from langdetect import detect, DetectorFactory
-import llm
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 
 # Fix randomness in langdetect
 DetectorFactory.seed = 0
@@ -73,6 +78,33 @@ def subjectivity(text: str) -> str:
     """
     return round(subjectivity, 2)
 
+def flag_duplicate_reviews(df, similarity_threshold=0.75):
+    df["duplicate_flag"] = False
+
+    # Group by business_name to only compare reviews within the same restaurant
+    for business, group in df.groupby("business_name"):
+        if len(group) < 2:
+            continue  # no comparisons needed
+
+        # Vectorize the cleaned reviews for this business
+        vectorizer = TfidfVectorizer()
+        tfidf_matrix = vectorizer.fit_transform(group["cleaned_text"])
+
+        # Compute pairwise cosine similarity
+        similarity_matrix = cosine_similarity(tfidf_matrix)
+
+        # Flag reviews that are very similar to any other review
+        duplicate_indices = set()
+        for i in range(len(group)):
+            for j in range(i + 1, len(group)):
+                if similarity_matrix[i, j] >= similarity_threshold:
+                    duplicate_indices.add(group.index[i])
+                    duplicate_indices.add(group.index[j])
+
+        # Mark flagged reviews
+        df.loc[list(duplicate_indices), "duplicate_flag"] = True
+
+    return df
 
 def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
     df = pd.read_csv(input_path)
@@ -92,17 +124,20 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
     # Language filter (keep English only)
     df["lang"] = df["cleaned_text"].apply(detect_language)
     df = df[df["lang"] == "en"]
-    
+
     # Metadata features
     df["review_length"] = df["cleaned_text"].apply(lambda x: len(x.split()))
     df["exclaim_count"] = df["cleaned_text"].apply(count_exclamation)
     df["caps_count"] = df["cleaned_text"].apply(count_all_caps)
     df["contains_url"] = df["cleaned_text"].apply(contains_url)
+
+    # duplicate reviews flagger
+    df = flag_duplicate_reviews(df)
     
     # Save processed dataset
     df.to_csv(output_path, index=False)
     print(f"Preprocessed data saved to {output_path} (rows: {len(df)})")
 
 if __name__ == "__main__":
-    preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews.csv")
-    llm.compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.csv")
+    preprocess_reviews("data/input/review-Vermont_10.csv", "data/output/processed_review-Vermont_10.csv")
+    """llm.compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.csv")"""

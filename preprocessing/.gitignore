@@ -1,3 +1,6 @@
 
 #virtural environement
 .venv/
+__pycache__
+
+data/input
