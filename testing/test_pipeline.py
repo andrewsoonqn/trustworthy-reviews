@@ -9,7 +9,7 @@
 # In[1]: 
 
 
-from datasets import load_dataset, DatasetDict, Dataset
+from datasets import load_dataset, DatasetDict, Dataset, load_metric
 
 from transformers import (
     AutoTokenizer,
@@ -83,8 +83,15 @@ model_checkpoint = 'distilbert-base-uncased'
 # model_checkpoint = 'roberta-base' # you can alternatively use roberta-base but this model is bigger thus training will take longer
 
 # define label maps
-id2label = {0: "Spam", 1: "Positive"} # for the model to predict 
-label2id = {"Negative":0, "Positive":1} # to understand training data
+id2label = {
+    0: "spam",
+    1: "advertisement",
+    2: "relevant",
+    3: "rant",
+    4: "violation"
+} # for the model to predict 
+
+label2id = {v: k for k, v in id2label.items()} # to understand training data
 
 # generate classification model from model_checkpoint
 model = AutoModelForSequenceClassification.from_pretrained(
@@ -153,18 +160,18 @@ data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
 
 # import accuracy evaluation metric
-accuracy = evaluate.load("accuracy")
+metric = load_metric('accuracy')
 
 
 # In[ ]:
 
 
 # define an evaluation function to pass into trainer later
+# changed to be suited for multi label classification
 def compute_metrics(p):
-    predictions, labels = p
-    predictions = np.argmax(predictions, axis=1)
-
-    return {"accuracy": accuracy.compute(predictions=predictions, references=labels)}
+    labels = pred.label_ids
+    preds = pred.predictions.argmax(-1)
+    return metric.compute(predictions=preds, references=labels)
 
 
 # ### Apply untrained model to text
