@@ -78,11 +78,7 @@ def subjectivity(text: str) -> str:
     """
     return round(subjectivity, 2)
 
-def flag_duplicate_reviews(df, similarity_threshold=0.8):
-    """
-    Flags potentially duplicate reviews per business using TF-IDF cosine similarity.
-    Adds a boolean column 'duplicate_flag'.
-    """
+def flag_duplicate_reviews(df, similarity_threshold=0.75):
     df["duplicate_flag"] = False
 
     # Group by business_name to only compare reviews within the same restaurant
@@ -143,5 +139,5 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
     print(f"Preprocessed data saved to {output_path} (rows: {len(df)})")
 
 if __name__ == "__main__":
-    preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews.csv")
+    preprocess_reviews("data/input/review-Vermont_10.csv", "data/output/processed_review-Vermont_10.csv")
     """llm.compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.csv")"""
