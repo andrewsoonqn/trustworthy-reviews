@@ -10,6 +10,8 @@
 
 import pandas as pd
 
+# ignore this once u get a json, replace with 
+# df = pd.read_json("file name")
 df = pd.read_csv("/Users/heyyzel/Documents/TikTok_TechJam/trustworthy-reviews/testing/mock-db/mock-db.csv")
 
 from datasets import load_dataset, DatasetDict, Dataset
