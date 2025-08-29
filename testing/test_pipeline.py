@@ -57,8 +57,8 @@ torch.device("cuda")
 
 
 # load dataset
-dataset_big = load_dataset('shawhin/imdb-truncated')
-dataset_big
+dataset_big = load_dataset('shawhin/imdb-truncated') #panda
+
 # take only 100 samples from train/validation
 dataset = DatasetDict({
     "train": dataset_big["train"].select(range(100)),
@@ -88,7 +88,7 @@ label2id = {"Negative":0, "Positive":1} # to understand training data
 
 # generate classification model from model_checkpoint
 model = AutoModelForSequenceClassification.from_pretrained(
-    model_checkpoint, num_labels=2, id2label=id2label, label2id=label2id)
+    model_checkpoint, num_labels=2, id2label=id2label, label2id=label2id, problem_type="multi_label_classification")
 
 
 # In[ ]:
