@@ -1,0 +1,1 @@
+HUGGINGFACE_TOKEN=[replace this (including square brackets `[]`) with your hugging face token and rename the file to `.env`]
