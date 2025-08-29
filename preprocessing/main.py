@@ -138,6 +138,6 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
     df.to_csv(output_path, index=False)
     print(f"Preprocessed data saved to {output_path} (rows: {len(df)})")
 
-if __name__ == "__main__":
-    preprocess_reviews("data/input/review-Vermont_10.csv", "data/output/processed_review-Vermont_10.csv")
-    """llm.compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.csv")"""
+#if __name__ == "__main__":
+ #   preprocess_reviews("data/input/review-Vermont_10.csv", "data/output/processed_review-Vermont_10.csv")
+  #  """llm.compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.csv")"""

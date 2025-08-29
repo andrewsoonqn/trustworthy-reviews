@@ -108,5 +108,5 @@ def compile_reviews(input_path, output_path):
     except Exception as e:
         logging.error(f"Error compiling reviews: {str(e)}")
 
-#if __name__ == "__main__":
-#    compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.json")
+if __name__ == "__main__":
+    compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.json")
