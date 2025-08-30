@@ -92,16 +92,16 @@ model_checkpoint = 'distilbert-base-uncased'
 # define label maps
 id2label = {
     0: "spam",
-    1: "advertisement",
-    2: "irrelevant",
-    3: "rant",
-    4: "violation"
+    #1: "advertisement",
+    1: "irrelevant",
+    2: "rant",
+    3: "policy_violations"
 } # for the model to predict
 
 label2id = {v: k for k, v in id2label.items()} # to understand training data
 
 model = AutoModelForSequenceClassification.from_pretrained(
-    model_checkpoint, num_labels=5, id2label=id2label, label2id=label2id, problem_type="multi_label_classification")
+    model_checkpoint, num_labels=4, id2label=id2label, label2id=label2id, problem_type="multi_label_classification")
 
 
 print("Created model to be trained")
