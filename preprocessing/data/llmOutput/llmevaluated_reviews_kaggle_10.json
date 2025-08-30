@@ -1,0 +1,310 @@
+    {
+        "review": "I went to there with my girl friend; I liked fishes but she did not like because fishes are a little bit oily.",
+        "evaluation": {
+            "review": [
+                0,
+                "Sardalye",
+                "Guney Gecer",
+                "I went to there with my girl friend; I liked fishes but she did not like because fishes are a little bit oily.",
+                "dataset/taste/sardalye_guney_gecer.png",
+                4,
+                "taste",
+                "I went to there with my girl friend; I liked fishes but she did not like because fishes are a little bit oily.",
+                0.21,
+                0.65,
+                "en",
+                23,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 0,
+                "policy_violations": 0,
+                "reason": "The review expresses a subjective opinion about the food (fish being oily) and a personal experience with a companion. The sentiment score (0.21) indicates a mildly negative opinion. There is no indication of spam, advertising, or irrelevant content. The review is cohesive and appropriately describes a simple dining experience."
+            }
+        }
+    },
+
+    {
+        "review": "Good in general. Quality for Kızılay and its surroundings. Lahmacun doesn't taste old...",
+        "evaluation": {
+            "review": [
+                1,
+                "Duveroglu",
+                "Can Akkaynak",
+                "Good in general. Quality for Kızılay and its surroundings. Lahmacun doesn't taste old...",
+                "dataset/menu/duveroglu_can_akkaynak.png",
+                4,
+                "menu",
+                "Good in general. Quality for Kızılay and its surroundings. Lahmacun doesn't taste old...",
+                0.28,
+                0.43,
+                "en",
+                13,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 0,
+                "policy_violations": 0,
+                "reason": "This review is a relatively positive and specific comment regarding the quality of the food (lahmacun) at Duveroglu in Kızılay. The sentiment score of 0.28 indicates a mildly positive tone. There's no indication of spam, advertising, or irrelevance based on the provided data."
+            }
+        }
+    },
+
+    {
+        "review": "My first stop for breakfast in Atakum is a place with quality service and friendly face.",
+        "evaluation": {
+            "review": [
+                2,
+                "Pecko Firin Atakum",
+                "Burhan Arslan",
+                "My first stop for breakfast in Atakum is a place with quality service and friendly face.",
+                "dataset/taste/pecko_firin_atakum_burhan_arslan.png",
+                5,
+                "taste",
+                "My first stop for breakfast in Atakum is a place with quality service and friendly face.",
+                0.31,
+                0.42,
+                "en",
+                16,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 0,
+                "policy_violations": 0,
+                "reason": "This review is a very brief and generic positive comment. While it expresses a positive sentiment (indicated by the 5-star rating and sentiment score), it lacks specific details about the business – Pecko Firin Atakum – and doesn’t offer concrete observations. The wording is somewhat vague (\"quality service and friendly face\") and could be applied to almost any establishment.  Therefore, it does not immediately flag as spam or an advertisement and isn't a rant."
+            }
+        }
+    },
+
+    {
+        "review": "Place was not clear.",
+        "evaluation": {
+            "review": [
+                3,
+                "Asucan Restaurant",
+                "Kjiong Son",
+                "Place was not clear.",
+                "dataset/indoor_atmosphere/asucan_restaurant_kjiong_son.png",
+                3,
+                "indoor_atmosphere",
+                "Place was not clear.",
+                -0.05,
+                0.38,
+                "en",
+                4,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 1,
+                "policy_violations": 1,
+                "reason": "The review \"Place was not clear\" is a vague, subjective complaint that lacks specific details and doesn't offer constructive feedback. It reads more like a disgruntled rant than a helpful review, and the sentiment score (-0.05) further suggests a negative emotional tone.  The lack of specifics and the subjective nature raise concerns about the reviewer's genuine experience at the location."
+            }
+        }
+    },
+
+    {
+        "review": "DEFINITELY DO NOT COME. We came here for breakfast based on the reviews on the way. We said the breakfast called the village breakfast for 2 people. First of all; the employee greeted us disrespectfully; a thousand pieces falling off his face; reluctant movements etc. It didn't taste good either!",
+        "evaluation": {
+            "review": [
+                4,
+                "Tuana Restaurant",
+                "Ahmet Ekim",
+                "DEFINITELY DO NOT COME. We came here for breakfast based on the reviews on the way. We said the breakfast called the village breakfast for 2 people. First of all; the employee greeted us disrespectfully; a thousand pieces falling off his face; reluctant movements etc. It didn't taste good either!",
+                "dataset/taste/tuana_restaurant_ahmet_ekim.png",
+                1,
+                "taste",
+                "DEFINITELY DO NOT COME. We came here for breakfast based on the reviews on the way. We said the breakfast called the village breakfast for 2 people. First of all; the employee greeted us disrespectfully; a thousand pieces falling off his face; reluctant movements etc. It didn't taste good either!",
+                0.38,
+                0.48,
+                "en",
+                50,
+                1,
+                4,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 1,
+                "policy_violations": 1,
+                "reason": "The review is overwhelmingly negative and expresses a highly emotional, personal complaint. The description of the employee’s appearance (\"a thousand pieces falling off his face; reluctant movements\") and the subjective assessment of the food quality (\"It didn't taste good either!\") constitute a rant rather than a constructive review. The exclaim_count (1) and caps_count (4) also suggest heightened emotion, further reinforcing the rant classification."
+            }
+        }
+    },
+
+    {
+        "review": "The attitude of the waiters towards the customer was cold.",
+        "evaluation": {
+            "review": [
+                5,
+                "Umut Pide",
+                "Engin Demirci",
+                "The attitude of the waiters towards the customer was cold.",
+                "dataset/indoor_atmosphere/umut_pide_engin_demirci.png",
+                1,
+                "indoor_atmosphere",
+                "The attitude of the waiters towards the customer was cold.",
+                -0.6,
+                1.0,
+                "en",
+                10,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 1,
+                "policy_violations": 1,
+                "reason": "The review expresses a negative opinion regarding customer service (\"cold attitude of the waiters\") which suggests a personal experience and potentially an emotional reaction. Coupled with the low rating (1/5) and subjective nature (subjectivity=1.0), it leans towards a rant by a user who likely hasn't visited the location recently and is expressing dissatisfaction."
+            }
+        }
+    },
+
+    {
+        "review": "The menu content is beautifully varied and satisfying.",
+        "evaluation": {
+            "review": [
+                6,
+                "My Friends Burger",
+                "Nilufer Yilmaz",
+                "The menu content is beautifully varied and satisfying.",
+                "dataset/taste/my_friends_burger_nilufer_yilmaz.png",
+                5,
+                "taste",
+                "The menu content is beautifully varied and satisfying.",
+                0.68,
+                1.0,
+                "en",
+                8,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 0,
+                "policy_violations": 0,
+                "reason": "The review is a positive comment regarding the menu content and has a high sentiment score (0.68). There is no indication of spam, advertising, irrelevance, or a rant. It appears to be a genuine customer review."
+            }
+        }
+    },
+
+    {
+        "review": "I ate a lot of croissants; but this was the best quality beautiful croissant I've ever eaten in my life. Crispy on the outside; with lots of butter on the inside; the smell was amazing.",
+        "evaluation": {
+            "review": [
+                7,
+                "Kruvasan",
+                "Beste Yalcin",
+                "I ate a lot of croissants; but this was the best quality beautiful croissant I've ever eaten in my life. Crispy on the outside; with lots of butter on the inside; the smell was amazing.",
+                "dataset/menu/kruvasan_beste_yalcin.png",
+                4,
+                "menu",
+                "I ate a lot of croissants; but this was the best quality beautiful croissant I've ever eaten in my life. Crispy on the outside; with lots of butter on the inside; the smell was amazing.",
+                0.61,
+                0.56,
+                "en",
+                35,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 0,
+                "policy_violations": 0,
+                "reason": "The review expresses a highly subjective and enthusiastic opinion about the croissants, describing them as \"the best quality beautiful croissant I've ever eaten.\" While subjective opinions are acceptable, the language is overly dramatic and lacks specific details about the location itself. The review focuses entirely on the product, which is common, but doesn’t demonstrate a connection to the business being reviewed."
+            }
+        }
+    },
+
+    {
+        "review": "Good place. Meals were good. Service is also good. There is parking in front for cars.",
+        "evaluation": {
+            "review": [
+                8,
+                "Mevlana Lokantasi",
+                "Janna Asueva",
+                "Good place. Meals were good. Service is also good. There is parking in front for cars.",
+                "dataset/taste/mevlana_lokantasi_janna_asueva.png",
+                4,
+                "taste",
+                "Good place. Meals were good. Service is also good. There is parking in front for cars.",
+                0.7,
+                0.6,
+                "en",
+                16,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 0,
+                "irrelevant": 0,
+                "rant": 0,
+                "policy_violations": 0,
+                "reason": "This review is a standard, positive feedback review and doesn't exhibit any characteristics of spam, advertisement, irrelevant content, or a rant. The sentiment score of 0.7 confirms a generally positive tone."
+            }
+        }
+    },
+
+    {
+        "review": "The menu is incomplete; not much; usually a disaster with happy sweet toys; felt-tip pens and a few cardboard coloring pages.",
+        "evaluation": {
+            "review": [
+                9,
+                "Mcdonalds Fethiye",
+                "Di Nessa",
+                "The menu is incomplete; not much; usually a disaster with happy sweet toys; felt-tip pens and a few cardboard coloring pages.",
+                "dataset/outdoor_atmosphere/mcdonalds_fethiye_di_nessa.png",
+                3,
+                "outdoor_atmosphere",
+                "The menu is incomplete; not much; usually a disaster with happy sweet toys; felt-tip pens and a few cardboard coloring pages.",
+                0.27,
+                0.5,
+                "en",
+                21,
+                0,
+                0,
+                false
+            ],
+            "evaluation": {
+                "sentiment": "Neutral",
+                "spam": 1,
+                "irrelevant": 1,
+                "rant": 1,
+                "policy_violations": 1,
+                "reason": "The review describes a situation (happy sweet toys, coloring pages) that is highly unlikely to be associated with a McDonald's restaurant. This suggests the reviewer likely has never visited the location or is intentionally attempting to express a negative opinion in an irrelevant manner. The sentiment score of 0.27 further indicates a mildly negative opinion, which is inappropriate given the context."
+            }
+        }
+    }
+]
