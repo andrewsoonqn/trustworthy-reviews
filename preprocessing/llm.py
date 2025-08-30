@@ -5,7 +5,7 @@ import re
 import json
 from tqdm import tqdm
 
-
+# Generate the prompt for the LLM
 def generate_prompt(review):
     try:
         prompt = f"""You are an AI tasked with evaluating the quality and relevancy of Google location reviews. You are provided with the following review:
@@ -30,6 +30,7 @@ def generate_prompt(review):
         logging.error(f"Error generating prompt: {str(e)}")
 
 
+# Organise the LLM's response to store the result in a library-like structure
 def parse_result(response):
     try:
         sentiment = re.search(r"Sentiment:\s*(Positive|Negative|Neutral)", response)
@@ -54,6 +55,7 @@ def parse_result(response):
         return {}
 
 
+# Main function applied to each review that generates the prompt and structures the response properly
 def evaluate_review(review):
     try:
         prompt = generate_prompt(review)
@@ -80,6 +82,7 @@ def evaluate_review(review):
             }
         }
 
+# Collate the individual responses from the LLM into a single .json file with organised data
 def compile_reviews(input_path, output_path, sample_size=None):
     try:
         df = pd.read_csv(input_path)
