@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 
 def count_flags_df(df: pd.DataFrame) -> dict:
