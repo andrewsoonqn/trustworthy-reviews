@@ -5,6 +5,48 @@ import re
 import json
 from tqdm import tqdm
 
+# Collate the individual responses from the LLM into a single .csv file with organised data
+def compile_reviews(df, output_path, sample_size=None):
+    try:
+        if sample_size:
+            df = df.sample(n=sample_size, random_state=42)
+
+        evaluation_results = []
+
+        for _, row in tqdm(list(enumerate(df.itertuples())), total=len(df), desc="Evaluating reviews"):
+            evaluation = evaluate_review(row) or {}
+            eval_data = evaluation["evaluation"]
+
+            review_dict = {
+                "business_name": getattr(row, "business_name", ""),
+                "author_name": getattr(row, "author_name", ""),
+                "review_text": getattr(row, "cleaned_text", ""),
+                "rating": getattr(row, "rating", None),
+                "sentimentNum": getattr(row, "sentiment", "Neutral"),
+                "subjectivity": getattr(row, "subjectivity", ""),
+                "lang": getattr(row, "lang", ""),
+                "review_length": getattr(row, "review_length", ""),
+                "exclaim_count": getattr(row, "exclaim_count", 0),
+                "caps_count": getattr(row, "caps_count", 0),
+                "contains_url": getattr(row, "contains_url", 0),
+                "sentiment": eval_data.get("sentiment", "Neutral"),
+                "spam": eval_data.get("advertisement", 0),
+                "irrelevant": eval_data.get("irrelevant", 0),
+                "rant": eval_data.get("rant", 0),
+                "policy_violations": eval_data.get("policy_violations", 0),
+            }
+
+            evaluation_results.append(review_dict)
+
+        result_df = pd.DataFrame(evaluation_results)
+        result_df.to_csv(output_path, index=False)
+
+        logging.info(f"Successfully wrote {len(evaluation_results)} reviews to {output_path}")
+        return result_df
+    except Exception as e:
+        logging.error(f"Error compiling reviews: {str(e)}")
+        return None
+
 # Generate the prompt for the LLM
 def generate_prompt(review):
     try:
@@ -19,7 +61,7 @@ def generate_prompt(review):
            Rant: 1/0
            Violation: 1/0
            Reason:
-           
+
            If any one of the Yes/No fields are answered with a "Yes", the review should immediately be flagged as a violation. If a review is considered a violation,
            please provide a reason under the "Reason:" field that concisely but adequately explains the violation. If there are multiple violations, please explain
            all of them clearly. Do not give a reason if the review has no violations, just leave that field entirely blank.
@@ -82,48 +124,6 @@ def evaluate_review(review):
             }
         }
 
-# Collate the individual responses from the LLM into a single .json file with organised data
-def compile_reviews(input_path, output_path, sample_size=None):
-    try:
-        df = pd.read_csv(input_path)
-
-        if sample_size:
-            df = df.sample(n=sample_size, random_state=42)
-
-        evaluation_results = []
-
-        for _, row in tqdm(list(enumerate(df.itertuples())), total=len(df), desc="Evaluating reviews"):
-            evaluation = evaluate_review(row) or {}
-            eval_data = evaluation["evaluation"]
-
-            review_dict = {
-                "business_name": getattr(row, "business_name", ""),
-                "author_name": getattr(row, "author_name", ""),
-                "review_text": getattr(row, "cleaned_text", ""),
-                "rating": getattr(row, "rating", None),
-                "sentimentNum": getattr(row, "sentiment", "Neutral"),
-                "subjectivity": getattr(row, "subjectivity", ""),
-                "lang": getattr(row, "lang", ""),
-                "review_length": getattr(row, "review_length", ""),
-                "exclaim_count": getattr(row, "exclaim_count", 0),
-                "caps_count": getattr(row, "caps_count", 0),
-                "contains_url": getattr(row, "contains_url", 0),
-                # extra evaluation fields
-                "sentiment": eval_data.get("sentiment", "Neutral"),
-                "spam": eval_data.get("spam", 0),
-                "irrelevant": eval_data.get("irrelevant", 0),
-                "rant": eval_data.get("rant", 0),
-                "policy_violations": eval_data.get("policy_violations", 0),
-            }
-
-            evaluation_results.append(review_dict)
-
-        with open(output_path, "w", encoding="utf-8") as json_file:
-            json.dump(evaluation_results, json_file, ensure_ascii=False, indent=4)
-
-        logging.info(f"Successfully wrote {len(evaluation_results)} reviews to {output_path}")
-    except Exception as e:
-        logging.error(f"Error compiling reviews: {str(e)}")
 
 if __name__ == "__main__":
-    compile_reviews("data/output/processed_reviews_400.csv", "data/llmOutput/llmevaluated_reviews_Kaggle_400.json")
+    compile_reviews(pd.read_csv("data/output/processed_reviews_400.csv"), "data/llmOutput/llmevaluated_reviews_Kaggle_400.json")

@@ -9,10 +9,14 @@
 # In[1]:
 
 import pandas as pd
-
+from preprocessing import llm, preprocess
 # ignore this once u get a json, replace with
-df = pd.read_json("../preprocessing/data/llmOutput/llmevaluated_reviews_Kaggle_400.json")
+# df = pd.read_json("../preprocessing/data/llmOutput/llmevaluated_reviews_Kaggle_400.json")
 # df = pd.read_csv("mock-db/mock-db.csv")
+input = "data/input/reviews.csv"
+cleaned = "data/output/processed_reviews.csv"
+labelled = "data/output/labelled_reviews.csv"
+df = llm.compile_reviews(preprocess.preprocess_reviews(input, cleaned),labelled)
 print("Loaded dataset: ")
 print(df.head())
 
