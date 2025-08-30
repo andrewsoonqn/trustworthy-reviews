@@ -14,7 +14,7 @@ def generate_prompt(review):
 
            Provide your evaluation in the exact format below:
            Sentiment: {review.sentiment}
-           Spam or Advertisement: 1/0
+           Advertisement: 1/0
            Irrelevant: 1/0
            Rant: 1/0
            Violation: 1/0
@@ -33,7 +33,7 @@ def generate_prompt(review):
 def parse_result(response):
     try:
         sentiment = re.search(r"Sentiment:\s*(Positive|Negative|Neutral)", response)
-        spam = re.search(r"Spam or Advertisement:\s*(1|0)", response)
+        spam = re.search(r"Advertisement:\s*(1|0)", response)
         irrelevant = re.search(r"Irrelevant:\s*(1|0)", response)
         rant = re.search(r"Rant:\s*(1|0)", response)
         violation = re.search(r"Violation:\s*(1|0)", response)
@@ -41,7 +41,7 @@ def parse_result(response):
 
         evaluation = {
             "sentiment": sentiment.group(1) if sentiment else "Neutral",
-            "spam": int(spam.group(1)) if spam else 0,
+            "advertisement": int(spam.group(1)) if spam else 0,
             "irrelevant": int(irrelevant.group(1)) if irrelevant else 0,
             "rant": int(rant.group(1)) if rant else 0,
             "policy_violations": int(violation.group(1)) if violation else 0,
@@ -72,7 +72,7 @@ def evaluate_review(review):
             "review": review.cleaned_text,
             "evaluation": {
                 "sentiment": "Unknown",
-                "spam": -1,
+                "advertisement": -1,
                 "irrelevant": -1,
                 "rant": -1,
                 "policy_violations": -1,
