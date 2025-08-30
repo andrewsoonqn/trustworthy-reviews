@@ -8,3 +8,7 @@ peft
 pandas
 numpy
 scikit-learn
+spacy
+SpacyTextBlob
+langdetect
+ollama

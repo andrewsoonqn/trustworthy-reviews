@@ -24,7 +24,7 @@ def detect_language(text: str) -> str:
         return detect(text)
     except:
         return "unknown"
-    
+
 def contains_url(text: str) -> bool:
     return "URL" in text.split()
 
@@ -40,13 +40,13 @@ def clean_text(text: str) -> str:
     """
     if not isinstance(text, str):
         return ""
-    
+
     # Use [^\s] instead of \S to avoid SyntaxWarning
     text = re.sub(r"http[^\s]+|www[^\s]+", " URL ", text)
-    
+
     # Remove extra whitespace
     text = re.sub(r"\s+", " ", text).strip()
-    
+
     return text
 
 def sentiment(text: str) -> float:
@@ -89,19 +89,19 @@ def flag_duplicate_reviews(df, similarity_threshold=0.75):
 
 def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
     df = pd.read_csv(input_path)
-    
+
     if sample_size:
         df = df.sample(sample_size, random_state=42)
-    
+
     # Drop duplicates & missing
     df = df.drop_duplicates(subset=["review_text"]).dropna(subset=["review_text"])
-    
+
     # Clean + normalize
     df["cleaned_text"] = df["review_text"].apply(clean_text)
 
     df["sentiment"] = df["cleaned_text"].apply(sentiment)
     df["subjectivity"] = df["cleaned_text"].apply(subjectivity)
-    
+
     # Language filter (keep English only)
     df["lang"] = df["cleaned_text"].apply(detect_language)
     df = df[df["lang"] == "en"]
@@ -114,7 +114,7 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
 
     # duplicate reviews flagger
     """df = flag_duplicate_reviews(df)"""
-    
+
     # Save processed dataset
     df.to_csv(output_path, index=False)
     print(f"Preprocessed data saved to {output_path} (rows: {len(df)})")
@@ -123,4 +123,4 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
 
 if __name__ == "__main__":
     df = preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews_500_new.csv", 500)
-    llm.compile_reviews(df, "data/llmOutput/llmevaluated_reviews_Kaggle_500.csv")
+    llm.compile_reviews(df, "data/llm_output/llmevaluated_reviews_Kaggle_500.csv")

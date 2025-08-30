@@ -12,7 +12,7 @@ import pandas as pd
 
 # ignore this once u get a json, replace with
 # df = pd.read_json("../preprocessing/data/llmOutput/llmevaluated_reviews_Kaggle_400.json")
-df = pd.read_csv("preprocessing/data/llmOutput/llmevaluated_reviews_Kaggle_500.csv")
+df = pd.read_csv("preprocessing/data/llm_output/llmevaluated_reviews_Kaggle_500.csv")
 print("Loaded dataset: ")
 print(df.head())
 

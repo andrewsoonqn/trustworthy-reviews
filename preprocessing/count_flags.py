@@ -63,5 +63,5 @@ def count_flags_csv(csv_path: str) -> dict:
     return totals
 
 if __name__ == "__main__":
-    counts = count_flags_csv("data/llmOutput/llmevaluated_reviews_Kaggle_400.csv")
+    counts = count_flags_csv("data/llm_output/llmevaluated_reviews_Kaggle_400.csv")
     print("Flag summary:", counts)
