@@ -11,8 +11,8 @@
 import pandas as pd
 
 # ignore this once u get a json, replace with
-# df = pd.read_json("file name")
-df = pd.read_csv("mock-db/mock-db.csv")
+df = pd.read_json("preprocessing/data/llmOutput/llmevaluated_reviews_Kaggle_400.json")
+# df = pd.read_csv("mock-db/mock-db.csv")
 print("Loaded dataset: ")
 print(df.head())
 
@@ -63,7 +63,7 @@ torch.device("cuda")
 # In[3]:
 
 
-label_cols = ["spam","advertisement","relevant","rant","violation"]
+label_cols = ["spam","irrelevant","rant","policy_violations"]
 pos_counts = df[label_cols].sum().to_numpy()
 neg_counts = len(df) - pos_counts
 pos_weight = torch.tensor(neg_counts / np.maximum(pos_counts, 1), dtype=torch.float)
@@ -93,7 +93,7 @@ model_checkpoint = 'distilbert-base-uncased'
 id2label = {
     0: "spam",
     1: "advertisement",
-    2: "relevant",
+    2: "irrelevant",
     3: "rant",
     4: "violation"
 } # for the model to predict
@@ -142,15 +142,15 @@ def build_text(examples):
         parts.append(str(examples["author_name"][i]))
         parts.append(str(examples["review_text"][i]))
         parts.append(f"rating:{examples['rating'][i]}")
-        parts.append(str(examples["rating_category"][i]))
-        parts.append(f"sentiment:{examples['sentiment'][i]}")
+        parts.append(f"sentimentNum:{examples['sentimentNum'][i]}")
         parts.append(f"subjectivity:{examples['subjectivity'][i]}")
         parts.append(f"lang:{examples['lang'][i]}")
         parts.append(f"review_length:{examples['review_length'][i]}")
         parts.append(f"exclaim_count:{examples['exclaim_count'][i]}")
         parts.append(f"caps_count:{examples['caps_count'][i]}")
         parts.append(f"contains_url:{examples['contains_url'][i]}")
-        parts.append(f"duplicate_flag:{examples['duplicate_flag'][i]}")
+        parts.append(f"sentiment:{examples['sentiment'][i]}")
+        #parts.append(f"duplicate_flag:{examples['duplicate_flag'][i]}")
         texts.append(" ".join(parts))
     return {"text": texts}
 
