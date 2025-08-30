@@ -197,8 +197,8 @@ def compute_metrics(p):
     labels = p.label_ids.astype(int)
     probs = 1 / (1 + np.exp(-logits))
     preds = (probs >= 0.5).astype(int)
-    f1_micro = metric_f1.compute(predictions=preds, references=labels, average="micro")["f1"]
-    f1_macro = metric_f1.compute(predictions=preds, references=labels, average="macro")["f1"]
+    f1_micro = metric_f1.compute(predictions=preds.flatten(), references=labels.flatten(), average="micro")["f1"]
+    f1_macro = metric_f1.compute(predictions=preds.flatten(), references=labels.flatten(), average="macro")["f1"]
     subset_acc = float((preds == labels).all(axis=1).mean())
     return {"f1_micro": f1_micro, "f1_macro": f1_macro, "subset_accuracy": subset_acc}
 
