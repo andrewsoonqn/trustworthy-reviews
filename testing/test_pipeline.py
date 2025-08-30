@@ -2,23 +2,25 @@
 # coding: utf-8
 
 # # Fine-tuning Sandbox
-# 
+#
 # Code authored by: Shawhin Talebi <br>
 # Blog link: https://medium.com/towards-data-science/fine-tuning-large-language-models-llms-23473d763b91
 
-# In[1]: 
+# In[1]:
 
 import pandas as pd
 
-# ignore this once u get a json, replace with 
+# ignore this once u get a json, replace with
 # df = pd.read_json("file name")
-df = pd.read_csv("/Users/heyyzel/Documents/TikTok_TechJam/trustworthy-reviews/testing/mock-db/mock-db.csv")
+df = pd.read_csv("mock-db/mock-db.csv")
+print("Loaded dataset: ")
+print(df.head())
 
 from datasets import load_dataset, DatasetDict, Dataset
 
 from transformers import (
     AutoTokenizer,
-    AutoConfig, 
+    AutoConfig,
     AutoModelForSequenceClassification,
     DataCollatorWithPadding,
     TrainingArguments,
@@ -42,9 +44,9 @@ torch.device("cuda")
 # imdb_dataset = load_dataset("imdb")
 
 # # define subsample size
-# N = 1000 
+# N = 1000
 # # generate indexes for random subsample
-# rand_idx = np.random.randint(24999, size=N) 
+# rand_idx = np.random.randint(24999, size=N)
 
 # # extract train and test data
 # x_train = imdb_dataset['train'][rand_idx]['text']
@@ -61,15 +63,15 @@ torch.device("cuda")
 # In[3]:
 
 
-# load dataset
-dataset_big = Dataset.from_pandas(df) #panda
+label_cols = ["spam","advertisement","relevant","rant","violation"]
+# pos_counts = df[label_cols].sum().to_numpy()
+# neg_counts = len(df) - pos_counts
+# pos_weight = torch.tensor(neg_counts / np.maximum(pos_counts, 1), dtype=torch.float)
+ds_full = Dataset.from_pandas(df)
+split = ds_full.train_test_split(test_size=0.2, seed=42)
+dataset = DatasetDict({"train": split["train"], "validation": split["test"]})
 
-# take only 100 samples from train/validation
-dataset = DatasetDict({
-    "train": dataset_big, #.select(range(100)),
-    "validation": dataset_big #.select(range(86)),
-})
-
+print("Created train and test/eval splits")
 
 
 # In[4]:
@@ -94,20 +96,19 @@ id2label = {
     2: "relevant",
     3: "rant",
     4: "violation"
-} # for the model to predict 
+} # for the model to predict
 
 label2id = {v: k for k, v in id2label.items()} # to understand training data
 
-# generate classification model from model_checkpoint
 model = AutoModelForSequenceClassification.from_pretrained(
     model_checkpoint, num_labels=5, id2label=id2label, label2id=label2id, problem_type="multi_label_classification")
 
 
+print("Created model to be trained")
 # In[ ]:
 
 
 # display architecture
-model
 
 
 # ### preprocess data
@@ -115,10 +116,8 @@ model
 # In[ ]:
 
 
-# create tokenizer
 tokenizer = AutoTokenizer.from_pretrained(model_checkpoint, add_prefix_space=True)
 
-# add pad token if none exists
 if tokenizer.pad_token is None:
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
     model.resize_token_embeddings(len(tokenizer))
@@ -127,30 +126,53 @@ if tokenizer.pad_token is None:
 # In[ ]:
 
 
-# create tokenize function
-def tokenize_function(examples):
-    # extract text
-    text = examples["review_text"]
+def build_labels(examples):
+    labels = []
+    n = len(examples[label_cols[0]])
+    for i in range(n):
+        labels.append([int(examples[c][i]) for c in label_cols])
+    return {"labels": labels}
 
-    #tokenize and truncate text
+def build_text(examples):
+    texts = []
+    n = len(examples["review_text"])
+    for i in range(n):
+        parts = []
+        parts.append(str(examples["business_name"][i]))
+        parts.append(str(examples["author_name"][i]))
+        parts.append(str(examples["review_text"][i]))
+        parts.append(f"rating:{examples['rating'][i]}")
+        parts.append(str(examples["rating_category"][i]))
+        parts.append(f"sentiment:{examples['sentiment'][i]}")
+        parts.append(f"subjectivity:{examples['subjectivity'][i]}")
+        parts.append(f"lang:{examples['lang'][i]}")
+        parts.append(f"review_length:{examples['review_length'][i]}")
+        parts.append(f"exclaim_count:{examples['exclaim_count'][i]}")
+        parts.append(f"caps_count:{examples['caps_count'][i]}")
+        parts.append(f"contains_url:{examples['contains_url'][i]}")
+        parts.append(f"duplicate_flag:{examples['duplicate_flag'][i]}")
+        texts.append(" ".join(parts))
+    return {"text": texts}
+
+def tokenize_function(examples):
     tokenizer.truncation_side = "left"
-    tokenized_inputs = tokenizer(
-        text,
+    return tokenizer(
+        examples["text"],
         return_tensors="np",
         truncation=True,
         max_length=512
     )
 
-    return tokenized_inputs
-
 
 # In[ ]:
 
 
-# tokenize training and validation datasets
+dataset = dataset.map(build_labels, batched=True)
+dataset = dataset.map(build_text, batched=True)
 tokenized_dataset = dataset.map(tokenize_function, batched=True)
 tokenized_dataset
 
+print("Tokenized, built labels and text")
 
 # In[ ]:
 
@@ -164,19 +186,21 @@ data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 # In[ ]:
 
 
-# import accuracy evaluation metric
-metric = evaluate.load("accuracy")
+metric_f1 = evaluate.load("f1")
 
 
 # In[ ]:
 
 
-# define an evaluation function to pass into trainer later
-# changed to be suited for multi label classification
 def compute_metrics(p):
-    labels = pred.label_ids
-    preds = pred.predictions.argmax(-1)
-    return {"accuracy": metric.compute(predictions=preds, references=labels)}
+    logits = p.predictions
+    labels = p.label_ids.astype(int)
+    probs = 1 / (1 + np.exp(-logits))
+    preds = (probs >= 0.5).astype(int)
+    f1_micro = metric_f1.compute(predictions=preds, references=labels, average="micro")["f1"]
+    f1_macro = metric_f1.compute(predictions=preds, references=labels, average="macro")["f1"]
+    subset_acc = float((preds == labels).all(axis=1).mean())
+    return {"f1_micro": f1_micro, "f1_macro": f1_macro, "subset_accuracy": subset_acc}
 
 
 # ### Apply untrained model to text
@@ -190,14 +214,12 @@ text_list = ["It was good.", "Not a fan, don't recommed.", "Better than the firs
 print("Untrained model predictions:")
 print("----------------------------")
 for text in text_list:
-    # tokenize text
-    inputs = tokenizer.encode(text, return_tensors="pt")
-    # compute logits
-    logits = model(inputs).logits
-    # convert logits to label
-    predictions = torch.argmax(logits)
-
-    print(text + " - " + id2label[predictions.tolist()])
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+    logits = model(**inputs).logits
+    probs = torch.sigmoid(logits).detach().cpu().numpy()[0]
+    idx = np.where(probs >= 0.5)[0]
+    labels_pred = [id2label[i] for i in idx]
+    print(text + " - " + ", ".join(labels_pred))
 
 
 # ### Train model
@@ -254,8 +276,22 @@ training_args = TrainingArguments(
 # In[ ]:
 
 
-# creater trainer object
-trainer = Trainer(
+class WeightedTrainer(Trainer):
+    def __init__(self, pos_weight=None, **kwargs):
+        super().__init__(**kwargs)
+        self.pos_weight = pos_weight
+    def compute_loss(self, model, inputs, return_outputs=False):
+        labels = inputs.pop("labels")
+        outputs = model(**inputs)
+        logits = outputs.logits
+        if self.pos_weight is not None:
+            loss_fct = torch.nn.BCEWithLogitsLoss(pos_weight=self.pos_weight.to(logits.device))
+        else:
+            loss_fct = torch.nn.BCEWithLogitsLoss()
+        loss = loss_fct(logits, labels.float())
+        return (loss, outputs) if return_outputs else loss
+
+trainer = WeightedTrainer(
     model=model,
     args=training_args,
     train_dataset=tokenized_dataset["train"],
@@ -263,6 +299,7 @@ trainer = Trainer(
     tokenizer=tokenizer,
     data_collator=data_collator, # this will dynamically pad examples in each batch to be equal length
     compute_metrics=compute_metrics,
+    pos_weight=pos_weight,
 )
 
 # train model
@@ -274,16 +311,16 @@ trainer.train()
 # In[ ]:
 
 
-model.to('cpu') # moving to mps for Mac (can alternatively do 'cpu')
+model.to('cpu')
 
 print("Trained model predictions:")
 print("--------------------------")
 for text in text_list:
-    inputs = tokenizer.encode(text, return_tensors="pt").to("cpu") # moving to mps for Mac (can alternatively do 'cpu')
-
-    logits = model(inputs).logits
-    predictions = torch.max(logits,1).indices
-
-    print(text + " - " + id2label[predictions.tolist()[0]])
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512).to("cpu")
+    logits = model(**inputs).logits
+    probs = torch.sigmoid(logits).detach().cpu().numpy()[0]
+    idx = np.where(probs >= 0.5)[0]
+    labels_pred = [id2label[i] for i in idx]
+    print(text + " - " + ", ".join(labels_pred))
 
 
