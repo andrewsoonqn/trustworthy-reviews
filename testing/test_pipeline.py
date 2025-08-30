@@ -11,8 +11,8 @@
 import pandas as pd
 
 # ignore this once u get a json, replace with
-df = pd.read_json("../preprocessing/data/llmOutput/llmevaluated_reviews_Kaggle_400.json")
-# df = pd.read_csv("mock-db/mock-db.csv")
+# df = pd.read_json("../preprocessing/data/llmOutput/llmevaluated_reviews_Kaggle_400.json")
+df = pd.read_csv("preprocessing/data/llmOutput/llmevaluated_reviews_Kaggle_500.csv")
 print("Loaded dataset: ")
 print(df.head())
 
@@ -63,7 +63,7 @@ torch.device("cuda")
 # In[3]:
 
 
-label_cols = ["spam","irrelevant","rant","policy_violations"]
+label_cols = ["inauthentic","irrelevant", "advertisement", "rant","policy_violations"]
 pos_counts = df[label_cols].sum().to_numpy()
 neg_counts = len(df) - pos_counts
 pos_weight = torch.tensor(neg_counts / np.maximum(pos_counts, 1), dtype=torch.float)
@@ -91,17 +91,17 @@ model_checkpoint = 'distilbert-base-uncased'
 
 # define label maps
 id2label = {
-    0: "spam",
-    #1: "advertisement",
+    0: "inauthentic",
     1: "irrelevant",
-    2: "rant",
-    3: "policy_violations"
+    2: "advertisement",
+    3: "rant",
+    4: "policy_violations"
 } # for the model to predict
 
 label2id = {v: k for k, v in id2label.items()} # to understand training data
 
 model = AutoModelForSequenceClassification.from_pretrained(
-    model_checkpoint, num_labels=4, id2label=id2label, label2id=label2id, problem_type="multi_label_classification")
+    model_checkpoint, num_labels=5, id2label=id2label, label2id=label2id, problem_type="multi_label_classification")
 
 
 print("Created model to be trained")
@@ -149,8 +149,7 @@ def build_text(examples):
         parts.append(f"exclaim_count:{examples['exclaim_count'][i]}")
         parts.append(f"caps_count:{examples['caps_count'][i]}")
         parts.append(f"contains_url:{examples['contains_url'][i]}")
-        parts.append(f"sentiment:{examples['sentiment'][i]}")
-        #parts.append(f"duplicate_flag:{examples['duplicate_flag'][i]}")
+        parts.append(f"reason:{examples['reason'][i]}")
         texts.append(" ".join(parts))
     return {"text": texts}
 
@@ -209,8 +208,7 @@ def compute_metrics(p):
 
 
 # define list of examples - first 5 rows from CSV
-mock_df = pd.read_csv("mock-db/mock-db.csv")
-text_list = mock_df["review_text"].head(5).tolist()
+text_list = df["review_text"].head(5).tolist()
 
 print("Untrained model predictions:")
 print("----------------------------")
