@@ -115,12 +115,76 @@ def compile_reviews(input_path, output_path, sample_size=None):
 
             evaluation_results.append(review_dict)
 
-        with open(output_path, "w", encoding="utf-8") as json_file:
-            json.dump(evaluation_results, json_file, ensure_ascii=False, indent=4)
+        # Create a new DataFrame
+        evaluated_df = pd.DataFrame(evaluation_results)
 
-        logging.info(f"Successfully wrote {len(evaluation_results)} reviews to {output_path}")
+        # Save as CSV
+        evaluated_df.to_csv(output_path, index=False, encoding="utf-8")
+
+        logging.info(f"Successfully wrote {len(evaluated_df)} reviews to {output_path}")
     except Exception as e:
         logging.error(f"Error compiling reviews: {str(e)}")
 
+
+def compile_reviews(df: pd.DataFrame, output_path: str, sample_size: int = None) -> pd.DataFrame:
+    """
+    Takes a pandas DataFrame of reviews, evaluates them with LLM,
+    saves results as CSV, and returns a new DataFrame with evaluations added.
+
+    Parameters:
+        df (pd.DataFrame): Input DataFrame with reviews.
+        output_path (str): Path to save the evaluated CSV file.
+        sample_size (int, optional): If provided, sample that many reviews.
+
+    Returns:
+        pd.DataFrame: DataFrame with additional evaluation columns.
+    """
+    try:
+        if sample_size:
+            df = df.sample(n=sample_size, random_state=42)
+
+        evaluation_results = []
+
+        for _, row in tqdm(list(enumerate(df.itertuples())), total=len(df), desc="Evaluating reviews"):
+            evaluation = evaluate_review(row) or {}
+            eval_data = evaluation["evaluation"]
+
+            review_dict = {
+                "business_name": getattr(row, "business_name", ""),
+                "author_name": getattr(row, "author_name", ""),
+                "review_text": getattr(row, "cleaned_text", ""),
+                "rating": getattr(row, "rating", None),
+                "sentimentNum": getattr(row, "sentiment", "Neutral"),
+                "subjectivity": getattr(row, "subjectivity", ""),
+                "lang": getattr(row, "lang", ""),
+                "review_length": getattr(row, "review_length", ""),
+                "exclaim_count": getattr(row, "exclaim_count", 0),
+                "caps_count": getattr(row, "caps_count", 0),
+                "contains_url": getattr(row, "contains_url", 0),
+                # extra evaluation fields
+                "sentiment": eval_data.get("sentiment", "Neutral"),
+                "spam": eval_data.get("spam", 0),
+                "irrelevant": eval_data.get("irrelevant", 0),
+                "rant": eval_data.get("rant", 0),
+                "policy_violations": eval_data.get("policy_violations", 0),
+                "reason": eval_data.get("reason", "")
+            }
+
+            evaluation_results.append(review_dict)
+
+        # Create a new DataFrame
+        evaluated_df = pd.DataFrame(evaluation_results)
+
+        # Save as CSV
+        evaluated_df.to_csv(output_path, index=False, encoding="utf-8")
+
+        logging.info(f"Successfully wrote {len(evaluated_df)} reviews to {output_path}")
+
+        return evaluated_df
+
+    except Exception as e:
+        logging.error(f"Error compiling reviews: {str(e)}")
+        return pd.DataFrame()  # Return empty DataFrame on error
+
 if __name__ == "__main__":
-    compile_reviews("data/output/processed_reviews_400.csv", "data/llmOutput/llmevaluated_reviews_Kaggle_400.json")
+    compile_reviews("data/output/processed_reviews_full.csv", "data/llmOutput/llmevaluated_reviews_Kaggle_full.csv")
