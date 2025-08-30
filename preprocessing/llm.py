@@ -123,4 +123,4 @@ def compile_reviews(input_path, output_path, sample_size=None):
         logging.error(f"Error compiling reviews: {str(e)}")
 
 if __name__ == "__main__":
-    compile_reviews("data/output/processed_reviews_10.csv", "data/llmOutput/llmevaluated_reviews_Kaggle_10A.json")
+    compile_reviews("data/output/processed_reviews_400.csv", "data/llmOutput/llmevaluated_reviews_Kaggle_400.json")

@@ -139,5 +139,5 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
     print(f"Preprocessed data saved to {output_path} (rows: {len(df)})")
 
 if __name__ == "__main__":
-    preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews_10.csv", 10)
+    preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews_400.csv", 400)
     """llm.compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.csv")"""
