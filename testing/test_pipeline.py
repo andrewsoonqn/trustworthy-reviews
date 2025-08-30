@@ -208,8 +208,9 @@ def compute_metrics(p):
 # In[ ]:
 
 
-# define list of examples
-text_list = ["It was good.", "Not a fan, don't recommed.", "Better than the first one.", "This is not worth watching even once.", "This one is a pass."]
+# define list of examples - first 5 rows from CSV
+mock_df = pd.read_csv("mock-db/mock-db.csv")
+text_list = mock_df["review_text"].head(5).tolist()
 
 print("Untrained model predictions:")
 print("----------------------------")
