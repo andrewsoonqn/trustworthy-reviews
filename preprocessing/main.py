@@ -141,5 +141,5 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
     return df
 
 if __name__ == "__main__":
-    df = preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews_20.csv", 20)
-    llm.compile_reviews(df, "data/llmOutput/llmevaluated_reviews_Kaggle_20_new.csv")
+    df = preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews_50_new.csv", 50)
+    llm.compile_reviews(df, "data/llmOutput/llmevaluated_reviews_Kaggle_50_new.csv")
