@@ -1,0 +1,112 @@
+[
+    {
+        "review": "I went to there with my girl friend; I liked fishes but she did not like because fishes are a little bit oily.",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 0,
+            "policy_violations": 0,
+            "reason": "This review expresses a minor personal opinion about the food (fish being slightly oily) and doesn't contain any overtly negative or misleading statements. The sentiment score of 0.21 indicates a mildly positive overall experience. The review is relevant to a fish restaurant."
+        }
+    },
+    {
+        "review": "Good in general. Quality for Kızılay and its surroundings. Lahmacun doesn't taste old...",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 0,
+            "policy_violations": 0,
+            "reason": "This review is a relatively positive and specific comment about the quality of the food (lahmacun) in the Kızılay area. The sentiment score of 0.28 indicates a mildly positive feeling. There is no indication of spam, advertisement, irrelevant content, or a rant. The provided data aligns with a genuine customer review."
+        }
+    },
+    {
+        "review": "My first stop for breakfast in Atakum is a place with quality service and friendly face.",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 0,
+            "policy_violations": 0,
+            "reason": "This review is a brief, positive comment expressing satisfaction with a breakfast place in Atakum. The sentiment score of 0.31 indicates a slightly positive tone. There is no indication of spam, advertisement, irrelevant content, or a rant. The reviewer has likely visited the location based on the context."
+        }
+    },
+    {
+        "review": "Place was not clear.",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 1,
+            "policy_violations": 1,
+            "reason": "The review \"Place was not clear.\" is a very brief and vague complaint, suggestive of a rant rather than a constructive review. It lacks specific details about the location's issues, and the sentiment score (-0.05) indicates a negative but weak expression of dissatisfaction.  Given the brevity and lack of constructive criticism, it strongly suggests the reviewer has likely never actually visited the location."
+        }
+    },
+    {
+        "review": "DEFINITELY DO NOT COME. We came here for breakfast based on the reviews on the way. We said the breakfast called the village breakfast for 2 people. First of all; the employee greeted us disrespectfully; a thousand pieces falling off his face; reluctant movements etc. It didn't taste good either!",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 1,
+            "policy_violations": 1,
+            "reason": "The review is overwhelmingly negative and highly subjective, focusing on a personal interaction and taste experience. The language (\"DEFINITELY DO NOT COME,\" \"a thousand pieces falling off his face,\" \"disrespectfully\") suggests a rant rather than a constructive review. The strong negative sentiment and personal attack are highly unusual and indicative of a problematic review."
+        }
+    },
+    {
+        "review": "The attitude of the waiters towards the customer was cold.",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 1,
+            "policy_violations": 1,
+            "reason": "The review expresses a negative opinion regarding customer service (\"cold attitude\") which, combined with the low rating (1 star) and subjective language, strongly suggests a rant by a user who likely has not visited the location or is expressing a highly personal dissatisfaction. The sentiment score further reinforces this interpretation."
+        }
+    },
+    {
+        "review": "The menu content is beautifully varied and satisfying.",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 0,
+            "policy_violations": 0,
+            "reason": "The review is a positive comment about the menu content, indicating a genuine customer experience. There is no indication of spam, advertising, irrelevant information, or a rant."
+        }
+    },
+    {
+        "review": "I ate a lot of croissants; but this was the best quality beautiful croissant I've ever eaten in my life. Crispy on the outside; with lots of butter on the inside; the smell was amazing.",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 0,
+            "policy_violations": 0,
+            "reason": "The review expresses a strong, subjective opinion about the quality of the croissants. While enthusiastic, it doesn't contain misleading information, promotional language, or any other elements that would constitute a violation. The sentiment score of 0.61 indicates a positive, genuine experience."
+        }
+    },
+    {
+        "review": "Good place. Meals were good. Service is also good. There is parking in front for cars.",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 0,
+            "irrelevant": 0,
+            "rant": 0,
+            "policy_violations": 0,
+            "reason": "This review is a basic, positive comment about a restaurant. It lacks specific details or overly enthusiastic language that would indicate spam, an advertisement, or a rant. The sentiment score of 0.7 suggests a generally positive opinion."
+        }
+    },
+    {
+        "review": "The menu is incomplete; not much; usually a disaster with happy sweet toys; felt-tip pens and a few cardboard coloring pages.",
+        "evaluation": {
+            "sentiment": "Neutral",
+            "spam": 1,
+            "irrelevant": 1,
+            "rant": 1,
+            "policy_violations": 1,
+            "reason": "The review describes a situation (happy sweet toys, coloring pages) clearly indicative of a children’s play area, which is highly unlikely to be relevant to a McDonald's restaurant. This suggests the reviewer has likely never visited the location and is expressing a frustrated opinion based on a misunderstanding. This constitutes a significant deviation from a typical restaurant review."
+        }
+    }
+]

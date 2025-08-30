@@ -3,6 +3,7 @@ import ollama
 import logging
 import re
 import json
+from tqdm import tqdm
 
 
 def generate_prompt(review):
@@ -79,34 +80,29 @@ def evaluate_review(review):
             }
         }
 
-def compile_reviews(input_path, output_path):
+def compile_reviews(input_path, output_path, sample_size=None):
     try:
         df = pd.read_csv(input_path)
 
+        if sample_size:
+            df = df.sample(n=sample_size, random_state=42)
+
         evaluation_results = []
 
-        with open(output_path, "w") as json_file:
-            for i, row in enumerate(df.itertuples()):
-                evaluation = evaluate_review(row) or {}
-                review_dict = {
-                    "review": row.cleaned_text,
-                    "evaluation": evaluation["evaluation"]
-                }
+        # tqdm adds the loading bar
+        for _, row in tqdm(list(enumerate(df.itertuples())), total=len(df), desc="Evaluating reviews"):
+            evaluation = evaluate_review(row) or {}
+            evaluation_results.append({
+                "review": row.cleaned_text,
+                "evaluation": evaluation["evaluation"]
+            })
 
-                json_str = json.dumps(review_dict, ensure_ascii=False, indent=4)
-                json_lines = json_str.splitlines()
-                indented_lines = ["    " + line for line in json_lines]
-                json_file.write("\n".join(indented_lines))
+        with open(output_path, "w", encoding="utf-8") as json_file:
+            json.dump(evaluation_results, json_file, ensure_ascii=False, indent=4)
 
-                if i < len(df) - 1:
-                    json_file.write(",\n\n")
-                else:
-                    json_file.write("\n")
-
-            json_file.write("]")
-
+        logging.info(f"Successfully wrote {len(evaluation_results)} reviews to {output_path}")
     except Exception as e:
         logging.error(f"Error compiling reviews: {str(e)}")
 
 if __name__ == "__main__":
-    compile_reviews("data/output/processed_reviews_10.csv", "data/output/llmevaluated_reviews.json")
+    compile_reviews("data/output/processed_reviews_10.csv", "data/llmOutput/llmevaluated_reviews_Kaggle_10A.json")
