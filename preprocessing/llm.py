@@ -89,13 +89,31 @@ def compile_reviews(input_path, output_path, sample_size=None):
 
         evaluation_results = []
 
-        # tqdm adds the loading bar
         for _, row in tqdm(list(enumerate(df.itertuples())), total=len(df), desc="Evaluating reviews"):
             evaluation = evaluate_review(row) or {}
-            evaluation_results.append({
-                "review": row.cleaned_text,
-                "evaluation": evaluation["evaluation"]
-            })
+            eval_data = evaluation["evaluation"]
+
+            review_dict = {
+                "business_name": getattr(row, "business_name", ""),
+                "author_name": getattr(row, "author_name", ""),
+                "review_text": getattr(row, "cleaned_text", ""),
+                "rating": getattr(row, "rating", None),
+                "sentimentNum": getattr(row, "sentiment", "Neutral"),
+                "subjectivity": getattr(row, "subjectivity", ""),
+                "lang": getattr(row, "lang", ""),
+                "review_length": getattr(row, "review_length", ""),
+                "exclaim_count": getattr(row, "exclaim_count", 0),
+                "caps_count": getattr(row, "caps_count", 0),
+                "contains_url": getattr(row, "contains_url", 0),
+                # extra evaluation fields
+                "sentiment": eval_data.get("sentiment", "Neutral"),
+                "spam": eval_data.get("spam", 0),
+                "irrelevant": eval_data.get("irrelevant", 0),
+                "rant": eval_data.get("rant", 0),
+                "policy_violations": eval_data.get("policy_violations", 0),
+            }
+
+            evaluation_results.append(review_dict)
 
         with open(output_path, "w", encoding="utf-8") as json_file:
             json.dump(evaluation_results, json_file, ensure_ascii=False, indent=4)
