@@ -1,3 +1,5 @@
 
+.env
+distilbert*
 #macOS system files
 .DS_Store
