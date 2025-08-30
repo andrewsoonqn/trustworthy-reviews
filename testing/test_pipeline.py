@@ -64,9 +64,9 @@ torch.device("cuda")
 
 
 label_cols = ["spam","advertisement","relevant","rant","violation"]
-# pos_counts = df[label_cols].sum().to_numpy()
-# neg_counts = len(df) - pos_counts
-# pos_weight = torch.tensor(neg_counts / np.maximum(pos_counts, 1), dtype=torch.float)
+pos_counts = df[label_cols].sum().to_numpy()
+neg_counts = len(df) - pos_counts
+pos_weight = torch.tensor(neg_counts / np.maximum(pos_counts, 1), dtype=torch.float)
 ds_full = Dataset.from_pandas(df)
 split = ds_full.train_test_split(test_size=0.2, seed=42)
 dataset = DatasetDict({"train": split["train"], "validation": split["test"]})
@@ -280,7 +280,7 @@ class WeightedTrainer(Trainer):
     def __init__(self, pos_weight=None, **kwargs):
         super().__init__(**kwargs)
         self.pos_weight = pos_weight
-    def compute_loss(self, model, inputs, return_outputs=False):
+    def compute_loss(self, model, inputs, return_outputs=False, num_items_in_batch=None):
         labels = inputs.pop("labels")
         outputs = model(**inputs)
         logits = outputs.logits
