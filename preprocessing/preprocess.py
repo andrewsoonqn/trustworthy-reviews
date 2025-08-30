@@ -48,32 +48,14 @@ def clean_text(text: str) -> str:
 
     return text
 
-def sentiment(text: str) -> str:
+def sentiment(text: str) -> float:
     doc = nlp(text)
     polarity = doc._.blob.polarity
-    """
-    if polarity >= 0.05:
-        sentiment_label = "positive"
-    elif polarity <= -0.05:
-        sentiment_label = "negative"
-    else:
-        sentiment_label = "neutral"
-    return sentiment_label
-    """
     return round(polarity, 2)
 
-def subjectivity(text: str) -> str:
+def subjectivity(text: str) -> float:
     doc = nlp(text)
     subjectivity = doc._.blob.subjectivity
-    """
-    if subjectivity >= 0.05:
-        subjectivity_label = "positive"
-    elif subjectivity <= -0.05:
-        subjectivity_label = "negative"
-    else:
-        subjectivity_label = "neutral"
-    return subjectivity_label
-    """
     return round(subjectivity, 2)
 
 def flag_duplicate_reviews(df, similarity_threshold=0.75):
@@ -137,6 +119,8 @@ def preprocess_reviews(input_path: str, output_path: str, sample_size=None):
     print(f"Preprocessed data saved to {output_path} (rows: {len(df)})")
     return df
 
+    return df
+
 if __name__ == "__main__":
-    preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews_400.csv", 400)
-    """llm.compile_reviews("data/output/processed_reviews.csv", "data/output/llmevaluated_reviews.csv")"""
+    df = preprocess_reviews("data/input/reviews.csv", "data/output/processed_reviews_500_new.csv", 500)
+    llm.compile_reviews(df, "data/llmOutput/llmevaluated_reviews_Kaggle_500.csv")
